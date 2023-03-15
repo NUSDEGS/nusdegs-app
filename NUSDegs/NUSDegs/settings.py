@@ -91,7 +91,7 @@ CACHES = {
     }
 }
 
-# 也可以使用redis作为session存储
+# use redis for session
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 
