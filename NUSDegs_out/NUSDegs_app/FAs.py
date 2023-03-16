@@ -1,6 +1,9 @@
 # Process user's request for FAs
 
-import module,semester
+import module,semester,modsplan
+import prerequisites
+import itertools
+import re
 
 """
 # obtain fas and relavant modules from web
@@ -80,6 +83,65 @@ FAs = {'Algorithms & Theory':
         'others':['CS2220', 'CS5233']
         }
 
-def process_fas(fas):
+
+def get_mods_level(mod_list):
+    # obatin the levels of mods in mod_list
+    levels = [int(re.search(r'\d',mod).group()) for mod in mod_list]
+    return levels
+
+
+
+def generate_fas_mods(fas):
     # fas:["string"]
-    pass
+    # user chooses 1 fa
+    if len(fas)==1 :
+        # randomly pick 5 modules from this fa
+        fa_all_mods = FAs[fas[0]]['primaries']+FAs[fas[0]]['electives']
+        for combo in itertools.combinations(fa_all_mods, 5):
+            # check if contains >=3 in primaries
+            pri = list(set(combo)&set(FAs[fas[0]]['primaries']))
+            if len(pri) < 3:
+                continue
+            # check if contain >=1 level 4000 in primaries
+            level_pri = get_mods_level(pri)
+            if all(level<4 for level in level_pri):
+                continue
+            # check if contains >=3 level 4000
+            levels = get_mods_level(fa_all_mods)
+            if sum(level>=4 for level in levels) < 3:
+                continue
+            # if meets all requirements
+            return combo
+    #user chooses 2 fas
+    if len(fas)==2:
+        # randomly pick 3 mods from each fa_primaries
+        for combo1 in itertools.combinations(FAs[fas[0]],3):
+            # check if contains >=1 level 4000 in fa1
+            level_1 = get_mods_level(combo1)
+            if all(level<4 for level in level_1):
+                continue
+            for combo2 in itertools.combinations(FAs[fas[0]],3):
+                # check if contains >=1 level 4000 in fa2
+                level_2 = get_mods_level(combo2)
+                if all(level<4 for level in level_2):
+                    continue
+                #check if contains >=3 level 4000 in fa1+fa2
+                levels = get_mods_level(combo1+combo2)
+                if sum(level>=4 for level in levels) < 3:
+                    continue
+                return combo1+combo2
+
+
+def process_fas(plan:modsplan,fas,pre_mods):
+    while True:
+        FA = generate_fas_mods(fas)
+        cur_mods = pre_mods + FA
+        # check if all prerequisite met 
+        if prerequisites.check_prerequisites(cur_mods):
+            # add mods into plan
+            plan.generate_plan()
+            return
+        else :
+            continue
+
+    
