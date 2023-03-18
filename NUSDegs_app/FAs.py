@@ -1,6 +1,6 @@
 # Process user's request for FAs
 
-import module,semester,modsplan
+from module import module
 import prerequisites
 import itertools
 import re
@@ -50,7 +50,7 @@ print(course_dict)
 """
 
 # FAs dict obtained
-FAs = {'Algorithms & Theory': 
+FAs_mods = {'Algorithms & Theory': 
             {'Primaries':['CS3230', 'CS3231', 'CS3236', 'CS4231', 'CS4232', 'CS4234'], 
             'Electives':['CS3233', 'CS4257', 'CS4261', 'CS4268', 'CS4269', 'CS4330', 'CS5230', 'CS5234', 'CS5236', 'CS5237', 'CS5238', 'CS5330']}, 
         'Artificial Intelligence': 
@@ -89,8 +89,116 @@ def get_mods_level(mod_list):
     levels = [int(re.search(r'\d',mod).group()) for mod in mod_list]
     return levels
 
+def add_mods(num,mod_list,pre_mods):
+    # add num mods from mod_list according to prerequisite based on pre_mods
+    if num <=0 :
+        return []
+    adds = []
+    flag = 0
+    for mod in mod_list:
+        if prerequisites.check_mod_prereq(pre_mods,module(mod)):
+            adds.append(mod)
+            pre_mods.append(mod)
+            num -= 1
+        if num == 0:
+            flag = 1
+            return adds
+    if flag == 0:
+        for mod in list(set(mod_list)-(set(mod_list)&set(adds))):
+            adds.append(mod)
+            num -= 1
+            # add prerqe course
+            prereqmods = prerequisites.add_prereq(pre_mods,module(mod))
+            adds += prereqmods
+            pre_mods += prereqmods
+            for mod in prereqmods:
+                if mod in mod_list:
+                    # prereq mod is from mod_list
+                    num -= 1
+            if num < 0:
+                return adds
 
 
+def level_4000_mods(mod_list):
+    levels = get_mods_level(mod_list)
+    idx = levels.index(4)
+    mods4000 = mod_list[idx:]
+    return mods4000
+
+def process_user_mods(user_mods,pre_mods):
+    # add user specified modules and its prereq mods
+    adds = []
+    for mod in user_mods:
+        adds.append(mod)
+        pre_mods.append(mod)
+        if prerequisites.check_mod_prereq(pre_mods,module(mod))==False:
+            # add mods that in prereq but not in pre_mods into fa_mods
+            addmods = prerequisites.add_prereq(pre_mods,mod)
+            adds += addmods
+            pre_mods += addmods
+    return adds
+
+def add_primaries(fa,mods_list,pre_mods):
+    # check if current mods_list meet requirements and add primaries mods
+    # 1 level 4000 in primaries
+    if all(level<4 for level in get_mods_level(mods_list)):
+        # add a level 4000 mod
+        fa_mods_pri = FAs_mods[fa]['Primaries']
+        mods4000_pri = level_4000_mods(fa_mods_pri)
+        addmods = add_mods(1,mods4000_pri,pre_mods)
+        mods_list += addmods
+    # 3 primaries
+    if len(set(mods_list)&set(fa_mods_pri))<3:
+        num_toadd = 3 - len(set(mods_list)&set(fa_mods_pri))
+        addmods = add_mods(num_toadd,list(set(fa_mods_pri)-(set(mods_list)&set(fa_mods_pri))),pre_mods)
+        mods_list += addmods
+    return mods_list
+
+
+def generate_fas_mods(fas,pre_mods):
+    #fas:[{"name":"string","module":["string"]}]
+    fa_mods = []
+    if len(fas) == 1:
+        # set 3 primaries mods and 2 random mods for this fa
+        fa = fas[0]['name']
+        user_mods = fas[0]['module']   # module codes ["string"]
+        fa_mods_pri = FAs_mods[fa]['Primaries']
+        fa_mods_ele = FAs_mods[fa]['Electives']
+        if user_mods != []:
+            # add user specified modules and its prereq mods
+            fa_mods += process_user_mods(user_mods,pre_mods)
+            # add primaries mods
+            fa_mods = add_primaries(fa,fa_mods,pre_mods)
+            # add 2 level 4000 electives
+            mods4000_ele = level_4000_mods(fa_mods_ele)
+            num_toadd = 2-len(set(mods4000_ele)&set(fa_mods))
+            addmods = add_mods(num_toadd,list(set(mods4000_ele)-(set(mods4000_ele)&set(fa_mods))),pre_mods)
+            fa_mods += addmods
+
+        else:
+            # user has no specified modules
+            mods4000_ele = level_4000_mods(fa_mods_ele)
+            fa_mods = add_primaries(fa,[],pre_mods)
+            num_toadd = 2-len(set(mods4000_ele)&set(fa_mods))
+            fa_mods += add_mods(num_toadd,list(set(mods4000_ele)-(set(mods4000_ele)&set(fa_mods))),pre_mods)       
+    if len(fas) == 2:
+        # set 3 primaries mods for each fa
+        for i in range(2):
+            cur_fa_mods = []
+            fa = fas[i]['name']
+            user_mods = fas[i]['module']
+            if user_mods!=[]:
+                # user mods
+                cur_fa_mods += process_user_mods(user_mods,pre_mods)
+                # primaries mods
+                cur_fa_mods = add_primaries(fa,cur_fa_mods,pre_mods) 
+            else: 
+                cur_fa_mods = add_primaries(fa,[],pre_mods)
+            fa_mods += cur_fa_mods 
+    return fa_mods
+
+
+"""
 def generate_fas_mods(fas):
     # fas:["string"]
     # user chooses 1 fa
@@ -143,5 +251,5 @@ def process_fas(plan:modsplan,fas,pre_mods):
             return
         else :
             continue
+"""
 
-    

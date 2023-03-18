@@ -1,13 +1,11 @@
 # main function for generate module plan
 
-import module, semester, modsplan
+from module import module
+from semester import semester
+from modsplan import ModsPlan
 import ULR, FAs
 import prerequisites
 import json
-
-
-
-
 
 
 def modsplanner(request):
@@ -16,9 +14,9 @@ def modsplanner(request):
     req_dict = json.load(request)
     id = req_dict['id']
     major = req_dict['major']
-    fas = req_dict['fas']
+    fas = req_dict['fas']  #fas:[{"name":"string","module":["string"]}]
 
-    plan = modsplan.ModsPlan(id)
+    plan = ModsPlan(id)
 
     # University level requirements(24units): 
     ULR_ = ULR.ULR_modules()
@@ -33,7 +31,11 @@ def modsplanner(request):
     MS = ['MA1521','MA2001','ST2334'] 
 
     # process fas (20/24 units)
-    FAs.process_fas(plan,fas,pre_mods=ULR_+CE+CSF+MS)
+    FA = FAs.generate_fas_mods(fas,ULR_+CE+CSF+MS)
+
+    #generate schedule
+    #create DAG
+    #拓扑排序
 
     # process internship/fyp
 
