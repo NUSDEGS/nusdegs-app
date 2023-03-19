@@ -4,7 +4,7 @@ from module import module
 from semester import semester
 from modsplan import ModsPlan
 import ULR, FAs
-import prerequisites
+import prerequisites, generateplan
 import json
 
 
@@ -34,14 +34,14 @@ def modsplanner(request):
     FA = FAs.generate_fas_mods(fas,ULR_+CE+CSF+MS)
 
     #generate schedule
-    #create DAG
-    #拓扑排序
+    generateplan.generate_plan(plan,mods_list=ULR_+CE+CSF+MS+FA)
 
     # process internship/fyp
 
     # add ID/CD (12units)
 
     # UE (40units)
+    # need to substract excess mods selected in fas
 
     # check degree requirments
 

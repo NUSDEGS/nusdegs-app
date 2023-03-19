@@ -1,5 +1,6 @@
 # define class for module plans
-import module,semester
+from module import module
+from semester import semester
 import prerequisites
 
 class ModsPlan:
@@ -10,21 +11,21 @@ class ModsPlan:
         self.sems = []
         for i in range(8):
             self.sems.append(semester(i+1,20))
-
-    def add_sem(self,sem):
-        # add a semester plan
-        self.sems.append(sem)
     
-    def add_module(self,seq_num,mod:module):
+    def add_module(self,seq_num,mod):
         #  aadd a module to a semester
-        self.sems[seq_num].append(mod)
+        self.sems[seq_num].modules.append(mod)
 
-    def meet_deg_requirements():
+    def meet_deg_requirements(self):
         # check if the current plan meets degree requirements
         all_mods = []
         prerequisites.check_prerequisites(all_mods)
         pass
-
-    def generate_plan(mods_list):
-        # arrange mods into plan according to prerequisites
-        pass
+    
+    def ModsPlan_json(self):
+        # response dict
+        response = {
+            'id':self.id,
+            'sems':[sem.semester_json() for sem in self.sems]
+        }
+        return response

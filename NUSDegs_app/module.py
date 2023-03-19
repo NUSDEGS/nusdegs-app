@@ -36,6 +36,8 @@ class module:
 
     def prerequisite(self):
         # get prerequisite modules in prereqTree format
+        if 'prerequisiteRule' not in self.info.keys():
+            return {}
         prereqrule = self.info['prerequisiteRule']
         prereq_tree = self.generate_prereqtree(prereqrule)
         return prereq_tree

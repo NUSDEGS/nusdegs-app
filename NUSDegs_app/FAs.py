@@ -91,11 +91,15 @@ def get_mods_level(mod_list):
 
 def add_mods(num,mod_list,pre_mods):
     # add num mods from mod_list according to prerequisite based on pre_mods
+    num -= len(set(mod_list)&set(pre_mods))
     if num <=0 :
         return []
     adds = []
     flag = 0
     for mod in mod_list:
+        if mod in pre_mods:
+            continue
+        # if mod is preclusion of any mod in pre_mod: continue
         if prerequisites.check_mod_prereq(pre_mods,module(mod)):
             adds.append(mod)
             pre_mods.append(mod)
@@ -106,6 +110,7 @@ def add_mods(num,mod_list,pre_mods):
     if flag == 0:
         for mod in list(set(mod_list)-(set(mod_list)&set(adds))):
             adds.append(mod)
+            pre_mods.append(mod)
             num -= 1
             # add prerqe course
             prereqmods = prerequisites.add_prereq(pre_mods,module(mod))
@@ -115,7 +120,7 @@ def add_mods(num,mod_list,pre_mods):
                 if mod in mod_list:
                     # prereq mod is from mod_list
                     num -= 1
-            if num < 0:
+            if num <= 0:
                 return adds
 
 
@@ -125,27 +130,31 @@ def level_4000_mods(mod_list):
     mods4000 = mod_list[idx:]
     return mods4000
 
+
 def process_user_mods(user_mods,pre_mods):
     # add user specified modules and its prereq mods
     adds = []
     for mod in user_mods:
+        if mod in pre_mods:
+            continue
         adds.append(mod)
         pre_mods.append(mod)
         if prerequisites.check_mod_prereq(pre_mods,module(mod))==False:
             # add mods that in prereq but not in pre_mods into fa_mods
-            addmods = prerequisites.add_prereq(pre_mods,mod)
+            addmods = prerequisites.add_prereq(pre_mods,module(mod))
             adds += addmods
             pre_mods += addmods
     return adds
 
-def add_primaries(fa,mods_list,pre_mods):
+
+def add_primaries(fa,mods_list,pre_mods,n4):
     # check if current mods_list meet requirements and add primaries mods
-    # 1 level 4000 in primaries
+    # add n4 level 4000 in primaries
+    fa_mods_pri = FAs_mods[fa]['Primaries']
     if all(level<4 for level in get_mods_level(mods_list)):
-        # add a level 4000 mod
-        fa_mods_pri = FAs_mods[fa]['Primaries']
+        # add n4 level 4000 mod
         mods4000_pri = level_4000_mods(fa_mods_pri)
-        addmods = add_mods(1,mods4000_pri,pre_mods)
+        addmods = add_mods(n4,mods4000_pri,pre_mods)
         mods_list += addmods
     # 3 primaries
     if len(set(mods_list)&set(fa_mods_pri))<3:
@@ -168,7 +177,7 @@ def generate_fas_mods(fas,pre_mods):
             # add user specified modules and its prereq mods
             fa_mods += process_user_mods(user_mods,pre_mods)
             # add primaries mods
-            fa_mods = add_primaries(fa,fa_mods,pre_mods)
+            fa_mods = add_primaries(fa,fa_mods,pre_mods,1)
             # add 2 level 4000 electives
             mods4000_ele = level_4000_mods(fa_mods_ele)
             num_toadd = 2-len(set(mods4000_ele)&set(fa_mods))
@@ -178,23 +187,32 @@ def generate_fas_mods(fas,pre_mods):
         else:
             # user has no specified modules
             mods4000_ele = level_4000_mods(fa_mods_ele)
-            fa_mods = add_primaries(fa,[],pre_mods)
+            fa_mods = add_primaries(fa,[],pre_mods,1)
             num_toadd = 2-len(set(mods4000_ele)&set(fa_mods))
             fa_mods += add_mods(num_toadd,list(set(mods4000_ele)-(set(mods4000_ele)&set(fa_mods))),pre_mods)       
     if len(fas) == 2:
         # set 3 primaries mods for each fa
+        num_4000 = 0
         for i in range(2):
             cur_fa_mods = []
             fa = fas[i]['name']
             user_mods = fas[i]['module']
+            n4 = 1
+            if num_4000==1: 
+                # select only 1 4000 mod from fa_1
+                # need to select 2 4000 mods form fa_2
+                n4 = 2
             if user_mods!=[]:
                 # user mods
                 cur_fa_mods += process_user_mods(user_mods,pre_mods)
                 # primaries mods
-                cur_fa_mods = add_primaries(fa,cur_fa_mods,pre_mods) 
+                cur_fa_mods = add_primaries(fa,cur_fa_mods,pre_mods,n4) 
             else: 
-                cur_fa_mods = add_primaries(fa,[],pre_mods)
+                cur_fa_mods = add_primaries(fa,[],pre_mods,n4)
             fa_mods += cur_fa_mods 
+            # count num of level 4000 mods
+            num_4000 = get_mods_level(fa_mods).count(4)
+
     return fa_mods
 
 
