@@ -10,7 +10,7 @@ class ModsPlan:
         self.id = id
         self.sems = []
         for i in range(8):
-            self.sems.append(semester(i+1,20))
+            self.sems.append(semester(i+1,20)) # may consider max_mc her
     
     def add_module(self,seq_num,mod):
         #  aadd a module to a semester
