@@ -32,3 +32,29 @@ time2 = time.time()
 print(time2-time1)
 print(plan.ModsPlan_json())
 
+
+
+### New part of test
+
+import internfyp
+
+internfyp.add_special_sem(plan)
+
+internfyp.intern_fyp(plan,True,False,False,False)
+
+time3 = time.time()
+print(time3 - time2)
+print("add fyp")
+print(plan.ModsPlan_json())
+
+#internfyp.intern_fyp(plan,False,True,False,False)
+
+#internfyp.intern_fyp(plan,False,False,True,False)
+
+#internfyp.intern_fyp(plan,False,False,False,True)
+
+print("add many internships")
+print(plan.ModsPlan_json())
+
+time4 = time.time()
+print(time4 - time3)
