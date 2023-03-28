@@ -31,3 +31,8 @@ class semester:
         }
         return response
     
+    def check_module_exist(self,mod_code):
+        for one_mod in self.modules:
+            if one_mod == mod_code:
+                return True
+        return False
