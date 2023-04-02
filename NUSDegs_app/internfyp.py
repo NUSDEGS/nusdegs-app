@@ -1,7 +1,7 @@
 from modsplan import ModsPlan
 from semester import semester
 
-def add_special_sem(plan:ModsPlan):
+def add_special_sem(plan:ModsPlan,max_mc = 20):
     semesters = plan.sems 
     plan.sems = []
     aca_year = 0
@@ -15,7 +15,7 @@ def add_special_sem(plan:ModsPlan):
             semesters[indx].seq_num = i+1
             plan.sems.append(semesters[indx])
         else:
-            plan.sems.append(semester(i+1,20))
+            plan.sems.append(semester(i+1,max_mc))
 
 def intern6(plan:ModsPlan):
     # There are 3 courses representing 6 month internship:

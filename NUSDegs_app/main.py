@@ -5,6 +5,9 @@ from semester import semester
 from modsplan import ModsPlan
 import ULR, FAs
 import prerequisites, generateplan
+import internfyp
+import qet
+import idcd
 import json
 
 
@@ -15,6 +18,17 @@ def modsplanner(request):
     id = req_dict['id']
     major = req_dict['major']
     fas = req_dict['fas']  #fas:[{"name":"string","module":["string"]}]
+
+    isFyp = req_dict['isFyp']
+    is6mintern = req_dict['is6MonthInternship']
+    is31intern = req_dict['is3Month1Internship']
+    is32Intern = req_dict['is3Month2Internships']
+    maxMcs = req_dict['maxMcs']
+    doesNeedQet = req_dict['doesNeedQet']
+    cdIdGroup = req_dict['cdIdGroup']
+
+
+    plan = ModsPlan(id,maxMcs)
 
     plan = ModsPlan(id)
 
@@ -38,7 +52,16 @@ def modsplanner(request):
 
     # process internship/fyp
 
+    internfyp.add_special_sem(plan)
+
+    internfyp.intern_fyp(plan,isFyp,is6mintern,is31intern,is32Intern)
+    qet.newQET(plan,doesNeedQet)
+
+
     # add ID/CD (12units)
+
+    idcd.add_idcd(plan,cdIdGroup)
+
 
     # UE (40units)
     # need to substract excess mods selected in fas
