@@ -6,11 +6,11 @@ import prerequisites
 class ModsPlan:
     # define class of module plans
 
-    def __init__(self,id):
+    def __init__(self,id,max_mc = 20):
         self.id = id
         self.sems = []
         for i in range(8):
-            self.sems.append(semester(i+1,20))
+            self.sems.append(semester(i+1,max_mc))
     
     def add_module(self,seq_num,mod):
         #  aadd a module to a semester
