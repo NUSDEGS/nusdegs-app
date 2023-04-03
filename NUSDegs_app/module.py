@@ -4,6 +4,7 @@ import requests
 import json
 import itertools
 import re
+import tags
 
 class module:
     # class for modules
@@ -13,16 +14,37 @@ class module:
         # keys: code, title. mcs, tags, info
         self.code = code
         self.tags = []
-        #self.info = json.load(cache.get(code))
-        url = 'https://api.nusmods.com/v2/2022-2023/modules/'+code+'.json'
-        self.info = {key:value for (key,value) in requests.get(url).json().items()}
-        self.title = self.info['title']
-        self.mcs = int(self.info['moduleCredit'])
-
-    
-    def add_tag(self,tag:str):
-        # add a tag for module
-        self.tags.append(tag)
+        if code=='UE':
+            self.title = ""
+            self.mcs = 4
+            self.tags.append("Unrestricted Electives")
+        else:
+            #self.info = json.load(cache.get(code))
+            url = 'https://api.nusmods.com/v2/2022-2023/modules/'+code+'.json'
+            self.info = {key:value for (key,value) in requests.get(url).json().items()}
+            self.title = self.info['title']
+            self.mcs = int(self.info['moduleCredit'])
+        # add tags
+        if code=='ES1000' or code=='ES1103':
+            self.tags.append("English modules")
+        if code=='CP3880' or code=='CP3200' or code=='CP3202':
+            self.tags.append("Internship")
+        if code=='CP4101':
+            self.tags.append("FYP")
+        if code in ['CS1101S','ES2660','GEA1000','BT1101','ST1131','DSA1101'] or code.startswith('GEC') or code.startswith('GES') or code.startswith('GEN'):
+            self.tags.append("University level requirements")
+        if code=='IS1108':
+            self.tags.append("Computing Ethics")
+        if code in ['CS1231S','CS2030S','CS2040S','CS2100','CS2101','CS2103T','CS2106','CS2109S','CS3230']:
+            self.tags.append("Computer Science Foundation")
+        if code in ['MA1521','MA2001','ST2334']:
+            self.tags.append("Math & Science")
+        if code in tags.fas_mods:
+            self.tags.append("CS Focus Area")
+        if code in tags.idcd_mods:
+            self.tags.append("Interdisciplinary/Cross Disciplinary")
+        
+        
 
 
     def semester(self):
@@ -43,19 +65,11 @@ class module:
         return prereq_tree
     
 
-    def corequisite(self):
-        # get corequisite modules
-        pass
-    
-
     def preclusion(self):
         # get preclusion modules
-        pass
-
-
-    def timeslot(self):
-        # check if the module is available in morning/afternoon/evening
-        pass
+        preclurule = self.info['preclusionRule']
+        preclumods = re.findall(r"\b[A-Z]{2,4}\d{4}[A-Z]?\b",preclurule)
+        return preclumods
 
 
     def module_json(self):

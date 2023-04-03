@@ -3,20 +3,23 @@
 import random
 from django.core.cache import cache
 
-def ULR_modules():
-    ULR = []
-    # add Digital Literacy & Critique and Expression
-    ULR.append('CS1101S','ES2660')
+def add_ULR_modules(plan):
     # add Data Literacy 
-    ULR.append(random.sample(['GEA1000','BT1101','ST1131','DSA1101'],1))
+    DL = random.sample(['GEA1000','BT1101','ST1131','DSA1101'],1)[0]
+    plan.add_module(0,DL)
     # add Cultures and Connections
-    GEC = cache.get('GEC%')
-    ULR.append(random.sample(GEC,1))
+    GEC = 'GEC1017'
+    plan.add_module(1,GEC)
+    #GEC = random.sample(cache.get('GEC%'),1)
     # add Singapore Studies
-    GES = cache.get('GES%')
-    ULR.append(random.sample(GES,1))
+    GES = 'GES1005'
+    plan.add_module(2,GES)
+    #GES = random.sample(cache.get('GES%'),1)
     # add Communities and Engagement
-    GEN = cache.get('GEN%')
-    ULR.append(random.sample(GEN,1))
-
-    return ULR
+    GEN = 'GEN2000'
+    plan.add_module(3,GEN)
+    #GEN = random.sample(cache.get('GEN%'),1)
+    # add Critique and Expression
+    CriEx = 'ES2660'
+    plan.add_module(3,CriEx)
+    

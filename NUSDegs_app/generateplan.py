@@ -33,26 +33,22 @@ def arrange_mods(plan:ModsPlan,G):
     queue = deque([node for node in in_degree if in_degree[node] == 0])
     while queue:
         node = queue.popleft()
+        # skip CS2101
+        if node=='CS2101':
+            continue
         mod_node = module(node)
         mod_mcs = mod_node.mcs
         sem_num = mod_node.semester()
-        """
-        for i in range(sem_prereq_clear[node]+1,8):
-            if plan.sems[i].cur_mcs+mod_mcs<=plan.sems[i].max_mcs:
-                plan.sems[i].modules.append(node)
-                plan.sems[i].cur_mcs += mod_mcs
-                break
-        """
-        for i in range(sem_prereq_clear[node]+1,8): # should be 9?
-            cur_sem = i % 2
-            if cur_sem == 0:
-                cur_sem = 2
+        for i in range(sem_prereq_clear[node]+1,8): 
+            cur_sem = i % 2 + 1
             if cur_sem in sem_num:
-                # only consider semesters having the course
                 if plan.sems[i].cur_mcs+mod_mcs<=plan.sems[i].max_mcs:
                     plan.sems[i].modules.append(node)
                     plan.sems[i].cur_mcs += mod_mcs
                     break
+        if node=='CS2103T':
+            plan.sems[i].modules.append('CS2101')
+            plan.sems[i].cur_mcs += 4
         for neighbor in G[node]:
             in_degree[neighbor] -= 1
             if in_degree[neighbor] == 0:
