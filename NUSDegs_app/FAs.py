@@ -54,7 +54,7 @@ FAs_mods = {'Algorithms & Theory':
             {'Primaries':['CS3230', 'CS3231', 'CS3236', 'CS4231', 'CS4232', 'CS4234'], 
             'Electives':['CS3233', 'CS4257', 'CS4261', 'CS4268', 'CS4269', 'CS4330', 'CS5230', 'CS5234', 'CS5236', 'CS5237', 'CS5238', 'CS5330']}, 
         'Artificial Intelligence': 
-            {'Primaries':['CS2109S', 'CS3243', 'CS3244', 'CS3263', 'CS3264', 'CS4243', 'CS4244', 'CS4246', 'CS4248'], 
+            {'Primaries':['CS2109S', 'CS3263', 'CS3264', 'CS4243', 'CS4244', 'CS4246', 'CS4248'], 
              'Electives': ['CS4220', 'CS4261', 'CS4269', 'CS4277', 'CS4278', 'CS5215', 'CS5228', 'CS5242', 'CS5260', 'CS5340', 'CS5339']}, 
         'Computer Graphics and Games': 
             {'Primaries':['CS3241', 'CS3242', 'CS3247', 'CS4247', 'CS4350'], 
@@ -78,7 +78,7 @@ FAs_mods = {'Algorithms & Theory':
             {'Primaries': ['CS2104', 'CS3211', 'CS4212', 'CS4215'], 
             'Electives': ['CS3234', 'CS4216', 'CS5232', 'CS5214', 'CS5215', 'CS5218']}, 
         'Software Engineering': 
-            {'Primaries': ['CS2103', 'CS2103T', 'CS3213', 'CS3219', 'CS4211', 'CS4218', 'CS4239'], 
+            {'Primaries': ['CS2103T', 'CS3213', 'CS3219', 'CS4211', 'CS4218', 'CS4239'], 
             'Electives': ['CS3216', 'CS3217', 'CS3226', 'CS3234', 'CS5219', 'CS5232', 'CS5272']},
         'others':['CS2220', 'CS5233']
         }
@@ -214,60 +214,4 @@ def generate_fas_mods(fas,pre_mods):
             num_4000 = get_mods_level(fa_mods).count(4)
 
     return fa_mods
-
-
-"""
-def generate_fas_mods(fas):
-    # fas:["string"]
-    # user chooses 1 fa
-    if len(fas)==1 :
-        # randomly pick 5 modules from this fa
-        fa_all_mods = FAs[fas[0]]['primaries']+FAs[fas[0]]['electives']
-        for combo in itertools.combinations(fa_all_mods, 5):
-            # check if contains >=3 in primaries
-            pri = list(set(combo)&set(FAs[fas[0]]['primaries']))
-            if len(pri) < 3:
-                continue
-            # check if contain >=1 level 4000 in primaries
-            level_pri = get_mods_level(pri)
-            if all(level<4 for level in level_pri):
-                continue
-            # check if contains >=3 level 4000
-            levels = get_mods_level(fa_all_mods)
-            if sum(level>=4 for level in levels) < 3:
-                continue
-            # if meets all requirements
-            return combo
-    #user chooses 2 fas
-    if len(fas)==2:
-        # randomly pick 3 mods from each fa_primaries
-        for combo1 in itertools.combinations(FAs[fas[0]],3):
-            # check if contains >=1 level 4000 in fa1
-            level_1 = get_mods_level(combo1)
-            if all(level<4 for level in level_1):
-                continue
-            for combo2 in itertools.combinations(FAs[fas[0]],3):
-                # check if contains >=1 level 4000 in fa2
-                level_2 = get_mods_level(combo2)
-                if all(level<4 for level in level_2):
-                    continue
-                #check if contains >=3 level 4000 in fa1+fa2
-                levels = get_mods_level(combo1+combo2)
-                if sum(level>=4 for level in levels) < 3:
-                    continue
-                return combo1+combo2
-
-
-def process_fas(plan:modsplan,fas,pre_mods):
-    while True:
-        FA = generate_fas_mods(fas)
-        cur_mods = pre_mods + FA
-        # check if all prerequisite met 
-        if prerequisites.check_prerequisites(cur_mods):
-            # add mods into plan
-            plan.generate_plan()
-            return
-        else :
-            continue
-"""
 
