@@ -1,9 +1,8 @@
 # Process user's request for FAs
 
-from module import module
-import prerequisites
-import itertools
 import re
+
+from .. import module, prerequisites
 
 """
 # obtain fas and relavant modules from web

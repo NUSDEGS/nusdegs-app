@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from ..NUSDegs_app.views import get_plans_view;
+from NUSDegs_app.views import get_plans_view;
 
 urlpatterns = [
     path("admin/", admin.site.urls),

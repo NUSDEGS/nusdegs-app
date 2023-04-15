@@ -4,7 +4,7 @@ import requests
 import json
 import itertools
 import re
-import tags
+from . import tags
 
 class module:
     # class for modules

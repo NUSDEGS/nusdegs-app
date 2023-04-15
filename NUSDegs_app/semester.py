@@ -1,5 +1,4 @@
-from module import module
-import prerequisites
+from . import module, prerequisites
 
 class semester:
     # define the class of semester data

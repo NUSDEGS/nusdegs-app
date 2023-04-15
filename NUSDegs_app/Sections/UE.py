@@ -1,7 +1,4 @@
 # add UE modules
-from module import module
-from semester import semester
-from modsplan import ModsPlan
 import math
 
 def add_UE(plan):

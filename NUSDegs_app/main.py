@@ -1,12 +1,11 @@
 # main function for generate module plan
 # return json form of plan
 
-from module import module
-from semester import semester
-from modsplan import ModsPlan
-import ULR, FAs, IDCD, QET, UE
-import prerequisites, generateplan, internfyp
 import json
+
+from . import prerequisites, generateplan, module, semester
+from .Sections import ULR, FAs, IDCD, QET, UE, internfyp
+from .modsplan import ModsPlan
 
 
 

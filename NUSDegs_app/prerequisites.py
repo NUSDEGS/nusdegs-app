@@ -1,4 +1,4 @@
-from module import module
+from . import module
 import random
 
 def check_prerequisites(mod_list):
