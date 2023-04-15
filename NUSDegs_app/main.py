@@ -12,7 +12,7 @@ from .modsplan import ModsPlan
 def modsplanner(request):
     
     # process the request to obtain id, major, fas
-    req_dict = json.load(request)
+    req_dict = json.loads(request)
     id = req_dict['id']
     major = req_dict['major']
     fas = req_dict['fas']  #fas:[{"name":"string","module":["string"]}]
