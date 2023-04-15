@@ -3,7 +3,7 @@
 
 import json
 
-from . import prerequisites, generateplan, module, semester
+from . import generateplan
 from .Sections import ULR, FAs, IDCD, QET, UE, internfyp
 from .modsplan import ModsPlan
 

@@ -1,8 +1,6 @@
 # define the class of modules
 #from django.core.cache import cache
 import requests
-import json
-import itertools
 import re
 from . import tags
 

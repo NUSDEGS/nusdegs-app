@@ -1,5 +1,4 @@
 from . import module
-import random
 
 def check_prerequisites(mod_list):
     # check if all prerequisites met for mods in mod_list
