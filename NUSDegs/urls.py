@@ -16,6 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from NUSDegs_app.views import get_plans_view;
+
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("get_plans/", get_plans_view, name="get_plans")
 ]

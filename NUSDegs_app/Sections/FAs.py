@@ -1,9 +1,9 @@
 # Process user's request for FAs
 
-from module import module
-import prerequisites
-import itertools
 import re
+
+from ..module import module
+from .. import prerequisites
 
 """
 # obtain fas and relavant modules from web
@@ -170,7 +170,7 @@ def generate_fas_mods(fas,pre_mods):
     if len(fas) == 1:
         # set 3 primaries mods and 2 random mods for this fa
         fa = fas[0]['name']
-        user_mods = fas[0]['module']   # module codes ["string"]
+        user_mods = fas[0]['modules']   # module codes ["string"]
         fa_mods_pri = FAs_mods[fa]['Primaries']
         fa_mods_ele = FAs_mods[fa]['Electives']
         if user_mods != []:
@@ -196,7 +196,7 @@ def generate_fas_mods(fas,pre_mods):
         for i in range(2):
             cur_fa_mods = []
             fa = fas[i]['name']
-            user_mods = fas[i]['module']
+            user_mods = fas[i]['modules']
             n4 = 1
             if num_4000==1: 
                 # select only 1 4000 mod from fa_1

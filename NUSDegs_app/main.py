@@ -1,19 +1,18 @@
 # main function for generate module plan
 # return json form of plan
 
-from module import module
-from semester import semester
-from modsplan import ModsPlan
-import ULR, FAs, IDCD, QET, UE
-import prerequisites, generateplan, internfyp
 import json
+
+from . import generateplan
+from .Sections import ULR, FAs, IDCD, QET, UE, internfyp
+from .modsplan import ModsPlan
 
 
 
 def modsplanner(request):
     
     # process the request to obtain id, major, fas
-    req_dict = json.load(request)
+    req_dict = json.loads(request)
     id = req_dict['id']
     major = req_dict['major']
     fas = req_dict['fas']  #fas:[{"name":"string","module":["string"]}]
@@ -25,7 +24,7 @@ def modsplanner(request):
     doesNeedQet = req_dict['doesNeedQet']
     cdIdGroup = req_dict['cdIdGroup']
 
-    plan = ModsPlan(id)
+    plan = ModsPlan(id, maxMcs)
 
     # University level requirements(24units): 
     ULR.add_ULR_modules(plan)

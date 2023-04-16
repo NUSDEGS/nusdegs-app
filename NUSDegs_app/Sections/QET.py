@@ -1,6 +1,4 @@
-from modsplan import ModsPlan
-from semester import semester
-
+from ..modsplan import ModsPlan
 
 def newQET(plan:ModsPlan,doesNeedQet:bool):
     if doesNeedQet:

@@ -1,5 +1,5 @@
-from modsplan import ModsPlan
-from module import module
+from ..module import module
+from ..modsplan import ModsPlan
 
 IDCD_groups = {
     'Management and IT':['IS1128','IS2218','DAO2703'],

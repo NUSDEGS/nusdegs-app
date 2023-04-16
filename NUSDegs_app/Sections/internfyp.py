@@ -1,5 +1,5 @@
-from modsplan import ModsPlan
-from semester import semester
+from ..semester import semester
+from ..modsplan import ModsPlan
 
 def add_special_sem(plan:ModsPlan):
     semesters = plan.sems 

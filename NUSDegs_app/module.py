@@ -1,10 +1,8 @@
 # define the class of modules
 #from django.core.cache import cache
 import requests
-import json
-import itertools
 import re
-import tags
+from . import tags
 
 class module:
     # class for modules
@@ -12,7 +10,7 @@ class module:
     def __init__(self,code):
         # get module info from redis database
         # keys: code, title. mcs, tags, info
-        self.code = code
+        self.code = code.split()[0]
         self.tags = []
         if code=='UE':
             self.title = ""
@@ -20,7 +18,7 @@ class module:
             self.tags.append("Unrestricted Electives")
         else:
             #self.info = json.load(cache.get(code))
-            url = 'https://api.nusmods.com/v2/2022-2023/modules/'+code+'.json'
+            url = 'https://api.nusmods.com/v2/2022-2023/modules/'+self.code+'.json'
             self.info = {key:value for (key,value) in requests.get(url).json().items()}
             self.title = self.info['title']
             self.mcs = int(self.info['moduleCredit'])

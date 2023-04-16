@@ -1,10 +1,10 @@
-from module import module
-from semester import semester
-from modsplan import ModsPlan
-import prerequisites,FAs
 import networkx as nx
 from collections import deque
 
+from .module import module
+from . import prerequisites
+from .modsplan import ModsPlan
+from .Sections import FAs
 
 def DAG(mods_list):   #mods_list: list of module codes ['string']
     # generate DAG
