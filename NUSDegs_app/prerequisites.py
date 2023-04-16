@@ -1,4 +1,4 @@
-from . import module
+from .module import module
 
 def check_prerequisites(mod_list):
     # check if all prerequisites met for mods in mod_list

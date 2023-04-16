@@ -1,4 +1,4 @@
-from . import module
+from .module import module
 
 class semester:
     # define the class of semester data

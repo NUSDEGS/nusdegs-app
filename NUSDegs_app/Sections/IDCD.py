@@ -1,4 +1,4 @@
-from .. import module
+from ..module import module
 from ..modsplan import ModsPlan
 
 IDCD_groups = {

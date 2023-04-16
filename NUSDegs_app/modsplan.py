@@ -1,5 +1,6 @@
 # define class for module plans
-from . import module, semester
+from .module import module
+from .semester import semester
 
 class ModsPlan:
     # define class of module plans

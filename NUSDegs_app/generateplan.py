@@ -1,7 +1,8 @@
 import networkx as nx
 from collections import deque
 
-from . import module, prerequisites
+from .module import module
+from . import prerequisites
 from .modsplan import ModsPlan
 from .Sections import FAs
 

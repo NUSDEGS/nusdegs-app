@@ -24,7 +24,7 @@ def modsplanner(request):
     doesNeedQet = req_dict['doesNeedQet']
     cdIdGroup = req_dict['cdIdGroup']
 
-    plan = ModsPlan(id)
+    plan = ModsPlan(id, maxMcs)
 
     # University level requirements(24units): 
     ULR.add_ULR_modules(plan)
